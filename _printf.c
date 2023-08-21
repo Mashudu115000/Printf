@@ -1,8 +1,10 @@
 #include "main.h"
 
+void print_buffer(char buffer[], int *buff_ind);
+
 /**
- * _printf - produces output according to a format
- * @format: format string containing the characters and the specifiers
+ * _printf - produces printf function
+ * @format: format string containing  characters and specifiers
  * Description: this function will call the get_print() function that will
  * determine which printing function to call depending on the conversion
  * specifiers contained into fmt
@@ -25,7 +27,7 @@ int _printf(const char *format, ...)
 		if (format[i] == '%')
 		{
 			if (format[i + 1] == '\0')
-			{	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+			{	print_int(buffer, ibuf), free(buffer), va_end(arguments);
 				return (-1);
 			}
 			else
@@ -51,4 +53,3 @@ int _printf(const char *format, ...)
 	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
 	return (len);
 }
-					
