@@ -12,59 +12,50 @@ void print_buffer(char buffer[], int *buff_ind);
  */
 int _printf(const char *format, ...)
 {
-	int i, printed = 0, printed_chars = 0;
-	int flags, width, precision, size, buff_ind = 0;
-	va_list list;
-	char buffer[BUFF_SIZE];
+	int i = 0, p = 0, p_ch = 0;
+	int flags, width, precision, size, buf_ind = 0;
+	va_list	list;
+	char buffer[BUF_SIZE];
 
 	if (format == NULL)
 		return (-1);
 
 	va_start(list, format);
 
-	for (i = 0; format && format[i] != '\0'; i++)
+	while (format && format[i] != '\0')
 	{
 		if (format[i] != '%')
 		{
-			buffer[buff_ind++] = format[i];
-			if (buff_ind == BUFF_SIZE)
-				print_buffer(buffer, &buff_ind);
-			/* write(1, &format[i], 1);*/
-			printed_chars++;
+			buffer[buf_ind++] = format[i];
+
+			if (buf_ind == BUF_SIZE)
+				p_buffer(buffer, &buf_ind);
+			
+			p_ch++;
 		}
 		else
 		{
-			print_buffer(buffer, &buff_ind);
+			p_buffer(buffer, &buf_ind);
 			flags = get_flags(format, &i);
 			width = get_width(format, &i, list);
 			precision = get_precision(format, &i, list);
 			size = get_size(format, &i);
-			++i;
-			printed = handle_print(format, &i, list, buffer,
-				flags, width, precision, size);
-			if (printed == -1)
+
+			p = handle_print(format, &i, list, buffer, flags, width, precision, size);
+
+			if (p == -1)
 				return (-1);
-			printed_chars += printed;
+			p_ch += p;
 		}
+		i++;
 	}
-
-	print_buffer(buffer, &buff_ind);
-
+	p_buffer(buffer, &buf_ind);
 	va_end(list);
-
-	return (printed_chars);
+	return (p_ch);
 }
-
-/**
- * print_buffer - Prints the contents of the buffer if it exist
- * @buffer: Array of chars
- * @buff_ind: Index at which to add next char, represents the length.
- */
-void print_buffer(char buffer[], int *buff_ind)
+void p_buffer(char buffer[], int *buf_ind)
 {
-	if (*buff_ind > 0)
-		write(1, &buffer[0], *buff_ind);
-
-	*buff_ind = 0;
+	if (*buf_ind > 0)
+		write(1, &buffer[0], *buf_ind);
+	*buf_ind = 0;
 }
-
